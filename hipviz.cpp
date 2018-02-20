@@ -16,6 +16,7 @@
 // with Hippo. If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdint.h>
+#include <string>
 
 #include "hippo.h"
 #include "gl.hpp"
@@ -109,7 +110,16 @@ GLuint init_vao(hippo *H)
 
 void init()
 {
-    if ((program = init_program("star-150.vert", "star-150.frag")))
+    const std::string glsl((const char *) glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+    if      (glsl.compare("1.30") == 0)
+        program = init_program("star-130.vert", "star-130.frag");
+    else if (glsl.compare("1.50") == 0)
+        program = init_program("star-150.vert", "star-150.frag");
+    else
+        program = 0;
+
+    if (program)
     {
         ploc = glGetAttribLocation (program, "Position");
         mloc = glGetAttribLocation (program, "Magnitude");
@@ -117,6 +127,7 @@ void init()
         Mloc = glGetUniformLocation(program, "M");
         bloc = glGetUniformLocation(program, "brightness");
     }
+    else printf("Failed to initialize GLSL shader.\n");
 
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
