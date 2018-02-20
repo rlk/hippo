@@ -112,12 +112,12 @@ void init()
 {
     const std::string glsl((const char *) glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-    if      (glsl.compare("1.30") == 0)
+    program = 0;
+
+    if (glsl.compare("1.30") == 0)
         program = init_program("star-130.vert", "star-130.frag");
-    else if (glsl.compare("1.50") == 0)
-        program = init_program("star-150.vert", "star-150.frag");
     else
-        program = 0;
+        program = init_program("star-150.vert", "star-150.frag");
 
     if (program)
     {
